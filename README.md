@@ -1,5 +1,7 @@
 # Artifacts for Unified Quasi-Static Scheduling for Concurrent MoCs
 
+Note: This repo is still under construction. A complete version is set to release by September 28, 2025.
+
 ## Getting started
 
 ### Requirements
@@ -77,5 +79,5 @@ You can either build the docker image yourself or pull it from dockerhub.
 
 ## TODOs
 - [ ] Bring EGS as a submodule here and document how to set it up using a virtual environment etc,
-- [ ] Create a FlexPRET config for the RTAS submission so others easily can build it  
-- [ ] we should also add the source links here and how to run the script to compile and do WCET analysis
+- [ ] Create a FlexPRET config used for the EMSOFT submission so others easily can build it  
+- [ ] Add the source links here and how to run the script to compile and do WCET analysis
