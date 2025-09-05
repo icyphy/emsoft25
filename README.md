@@ -1,6 +1,32 @@
-# Artifacts for Unified Quasi-Static Scheduling for Concurrent MoCs
+# Quasi-Static Scheduling for Deterministic Timed Concurrent Models on Multi-Core Hardware
 
-Note: This repo is still under construction. A complete version is set to release by September 28, 2025.
+### Problem
+Real-time embedded software aims to be predictable and efficient to run. To this end, _(quasi-)static scheduling_ has been applied extensively on a variety of concurrent models of computation, including [SDF](https://en.wikipedia.org/wiki/Synchronous_Data_Flow), [BDF](https://ptolemy.berkeley.edu/ptolemyclassic/almagest/docs/user/html/domains.doc5.html), [SADF](https://ieeexplore.ieee.org/document/6045491), and [LET](https://cs.uni-salzburg.at/~anas/papers/ARTS-chapter.pdf).
+These existing techniques for generating schedules at compile time are strikingly similar across models.
+
+In this paper, we ask the question — "Can these existing methods be _unified_ and _generalized_ for future models of computation?"
+
+### Key Idea
+
+The answer presented in this paper is **State Space Finite Automata (SSFA)**, an intermediate formalism bridging a model of computation and its underlying (quasi-)static schedules.
+
+In a nutshell, an SSFA is a state machine where each state contains a DAG task set.
+The SSFA should be derived from a high-level model of computation,
+and we define deterministic timed concurrent models (DTCMs) to be a class of models that supports deriving SSFAs from models' semantics.
+
+![ssfa](images/ssfa.png "Example of an SSFA")
+
+Once an SSFA is constructed, a quasi-static schedule can be produced by partitioning each DAG task set based on the number of available cores.
+
+### Demo
+
+This repository shows how to apply the SSFA-based quasi-static scheduling technique to a synchronous subset of Lingua Franca (LF), which is an emerging programming model for cyber-physical systems.
+
+This repository contains (i) code for the performance benchmark in the paper, and (ii) code for the satellite attitude control case study.
+
+Below shows a satellite attitude controller modelled in Lingua Franca, whose SSFA is shown in the SSFA diagram above.
+
+![satellite](images/SatelliteController2.svg "A satellite attitude controller in Lingua Franca")
 
 ## Getting started
 
