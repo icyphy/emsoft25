@@ -4,7 +4,7 @@
 This utility collects and processes tracing data of LF benchmarks running on top
 of a RPi4. A logic analyzer can be used to collect the traces, otherwise, the LF
 tracing mechasim is used.
-The supported operation systems for the RPi4 are Raspbian and QNX. The utility 
+The supported operation systems for the RPi4 are Raspbian and QNX.
 
 The configuration includes:
     - The general purpose machine (called `host`) on top of which this utility 

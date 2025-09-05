@@ -69,7 +69,7 @@ parser.add_argument(
     "-qd",
     "--qnx-support-directory",
     type=str,
-    default="timing/src/qnxSupport/low_level_platform",
+    default="qnx/low_level_platform",
     help="Specify the directory containing QNX support files."
 )
 
