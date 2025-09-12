@@ -8,65 +8,13 @@
  * advancing logical time occurs after each round of
  * message delivery.
  */
-
-
-/* [[[cog
-# This file is a code generator using the python module cog:
-# See https://nedbatchelder.com/code/cog/
-#
-# All instructions for code  generation are in-lined in comments
-# like this one. With that you can use this file as a normal source file
-# but also to generate code.
-#
-# To change the generated code in-line within this file run:
-# $ python -m cog -r this-file.lf
-# To generate a new file from this file stripping the generator code in the process run:
-# $ python -m cog -d -o output-file.lf this-file.lf
-#
-# Use the command line option -D to specify generator parameters, for example:
-# $ python -m cog -r -D parameter=100 this-file.lf
-#
-# Generator parameters used in this file:
-# -D numWorkers=60
-# -D numMessagesPerReactor=10000
-]]] */
-// [[[end]]]
-
-/* [[[cog
-  # force existence, type and default values of generator parameters
-  if 'numWorkers' in globals():
-    numWorkers = int(numWorkers)
-  else:
-    globals()['numWorkers'] = 60
-
-  # output the current value of the generator parameters used in the last generation run
-  cog.outl(f'// Generated file with the following parameters:')
-  cog.outl(f'// numWorkers = {numWorkers}')
-  cog.outl(f'// numMessagesPerReactor={numMessagesPerReactor}')
-]]] */
-// Generated file with the following parameters:
-// numWorkers = 60
-// numMessagesPerReactor = 10000
-// [[[end]]]
-
 target C {
-    /* [[[cog
-      if (threading=="True"):
-          cog.outl("single-threaded: false,")
-          cog.outl(f"workers: {workers},")
-          cog.outl(f"scheduler: {scheduler},")
-      else:
-          cog.outl("single-threaded: true,")
-    ]]] */
-    //single-threaded: true,
-    /// [[[end]]]
-    files: ["../../savina/src/include/benchmark_runner.h"],
-    //compiler-flags: "-lm",
+    files: ["../lib/benchmark_runner.h"],
     timeout: 300 msec, // The last 2 nsec is for the runner summary.
     workers: 1,
 };
 
-import BenchmarkRunner from "../../savina/src/BenchmarkRunner.lf";
+import BenchmarkRunner from "../lib/BenchmarkRunner.lf";
 
 preamble {=
     #include "benchmark_runner.h"
@@ -99,10 +47,6 @@ reactor ThroughputReactor(totalMessages:size_t=10000) {
     =}
 }
 
-
-/**
- *
- */
 realtime reactor ThroughputProducer(totalMessages:size_t=10000, numConsumer:size_t=60) {
     state sent_messages: size_t=0;
     input start:bool;
@@ -133,12 +77,7 @@ realtime reactor ThroughputProducer(totalMessages:size_t=10000, numConsumer:size
     =}
 }
 
-
-/* [[[cog
-cog.outl(f'main reactor (numIterations:size_t={numIterations}, numMessagesPerReactor:size_t={numMessagesPerReactor}, numWorkers:size_t={numWorkers})')
-]]] */
 main reactor (numIterations:size_t=12, numMessagesPerReactor:size_t=100, numWorkers:size_t=60)
-// [[[end]]]
 {
     runner = new BenchmarkRunner(num_iterations=numIterations);
     runner.doneOut -> runner.doneIn after 3 msec;

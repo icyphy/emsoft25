@@ -12,46 +12,13 @@
  *
  * For comparison some informal results for 1,000,000 messages
  */
-
- /* [[[cog
- # This file is a code generator using the python module cog:
- # See https://nedbatchelder.com/code/cog/
- #
- # All instructions for code  generation are in-lined in comments
- # like this one. With that you can use this file as a normal source file
- # but also to generate code.
- #
- # To change the generated code in-line within this file run:
- # $ python -m cog -r this-file.lf
- # To generate a new file from this file stripping the generator code in the process run:
- # $ python -m cog -d -o output-file.lf this-file.lf
- #
- # Use the command line option -D to specify generator parameters, for example:
- # $ python -m cog -r -D parameter=100 this-file.lf
- #
- # Generator parameters used in this file:
- # -D countTo=1000000
- #
- ]]] */
- // [[[end]]]
-
 target C {
-    /* [[[cog
-      if (threading=="True"):
-          cog.outl("single-threaded: false,")
-          cog.outl(f"workers: {workers},")
-          cog.outl(f"scheduler: {scheduler},")
-      else:
-          cog.outl("single-threaded: true,")
-    ]]] */
-    // single-threaded: true,
-    /// [[[end]]]
-    files: ["../../savina/src/include/benchmark_runner.h"],
+    files: ["../lib/benchmark_runner.h"],
     timeout: 13 sec,
     workers: 1,
 }
 
-import BenchmarkRunner from "../../savina/src/BenchmarkRunner.lf";
+import BenchmarkRunner from "../lib/BenchmarkRunner.lf";
 
 preamble {=
     #include "benchmark_runner.h"
@@ -59,23 +26,20 @@ preamble {=
 
 realtime reactor ProducerReactor(countTo:size_t=1000000) {
 
-
     state i:size_t=0; // current counter value
-
-    input inStartCounting:bool;
-
     
+    input inStartCounting:bool;
+    input inResult:int;
     output outResetCounter:bool;
     output outIncrement:bool;
     output outRetrieveResult:bool;
     output finished:bool;
-    input inResult:int;
 
-    //logical action outFinishedCounting;
+    // Replacing a logical action outFinishedCounting
     output outFinishedCountingOut: int;
     input outFinishedCountingIn: int;
 
-    //logical action count;
+    // Replacing a logical action count
     output countOut: int;
     input countIn: int;
 
@@ -148,11 +112,7 @@ realtime reactor CountingReactor {
     =}
 }
 
-/* [[[cog
-cog.outl(f"main reactor Counting(numIterations:size_t={numIterations}, countTo:size_t={countTo})")
-]]] */
 main reactor Counting(numIterations:size_t=12, countTo:size_t=1000)
-//[[[end]]]
 {
     producer = new ProducerReactor(countTo = countTo);
     producer.outFinishedCountingOut -> producer.outFinishedCountingIn after 2 msec;

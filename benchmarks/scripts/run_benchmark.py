@@ -35,7 +35,7 @@ Assumptions:
         - Every program has a companion csv file that describes the signals to trace.
           This is useful for processing the collected tracing data.
     - If the platform is QNX, it is assumed that:
-        - The QNX support files are located under `benchmarks/timing/src/qnxSupport/`
+        - The QNX support files are located under `benchmarks/qnx/`
         - The QNX toolchain is installed on the host machine.
         - The script (`qnxsdp-env.sh`) will already be ran on the terminal, before creating 
           the virtual environment. It is meant to set the environment variables (e.g., PATH,
@@ -516,7 +516,7 @@ def main(args=None):
     # Host directories
     host_src = benchmarks_dir / args.src
     host_src_gen = benchmarks_dir / args.src_gen
-    host_bin = benchmarks_dir / "timing/bin"
+    host_bin = benchmarks_dir / "bin"
     host_data = benchmarks_dir / "data"
 
     # Remote directories
@@ -555,17 +555,21 @@ def main(args=None):
         if not args.no_scp:
             remote_rm_dir(remost_dest)
             remote_create_dir(remost_dest)
-            if (args.platform != "QNX"):
+            if (args.platform != "RPI4-QNX"):
                 host_forall_subdirs_do(host_scp_dir, host_src_gen, remost_dest, args, True)
             
         # Step 4.3
         if not args.no_cmake:
-            if (args.platform != "QNX"):
+            if (args.platform != "RPI4-QNX"):
                 remote_forall_subdirs_do(remote_compile_cmake_project, remost_dest)
             else:
-                # Cross compile the LF programs
+                # If an existing host_bin directory exists, remove it.
+                # Otherwise, binaries from previous runs could persist
+                # and get scp-ed to the remote target mistakenly.
+                host_rm_dir(host_bin)
+                # Cross compile the LF programs, which puts binaries in host_bin
                 host_cross_compile_qnx_lf_files_in_dir(args, host_src_gen)
-                # Secure copy the generated file from src-gen/../build to the remote host
+                # Secure copy the generated file from host_bin to the remote host
                 host_scp_exec_files(host_bin, remost_dest, args)
 
         # Step 4.4
@@ -575,14 +579,14 @@ def main(args=None):
             # Step 4.5: run programs and collect trace files in a remote data directory.
             remote_rm_dir(remote_data)
             remote_create_dir(remote_data)
-            if (args.platform != "QNX"):
+            if (args.platform != "RPI4-QNX"):
                 remote_forall_subdirs_do(func=remote_run_program, dir=remost_dest, arg1=remote_data, arg2=args)
             else:
                 remote_run_all_programs_qnx(remost_dest, remote_data)
                 
             # Step 4.6: run tracing remotely, if not a QNX platform
             if not args.no_tracing:
-                if (args.platform != "QNX"):
+                if (args.platform != "RPI4-QNX"):
                     convert_for_chrome = True
                     remote_forall_files_in_dir_do(remote_run_trace_conversion, remote_data, remote_data, convert_for_chrome)
                     

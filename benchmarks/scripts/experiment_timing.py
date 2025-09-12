@@ -18,14 +18,6 @@ import credentials
 
 ################## CONFIGS ##################
 
-# Platform config: RPI4 (default), ODROID-XU4, QNX
-PLATFORM = "RPI4"
-
-# FIXME: This is completely useless!
-# This is ONLY used for naming files.
-# The script runs both LB and EGS regardless.
-STATIC_SCHEDULER_NAMES = ["LB", "EGS"]
-
 # Plot config
 ANNOTATE_MEAN_STD = False
 
@@ -51,6 +43,10 @@ FPS             = 5
 
 #############################################
 
+# This is ONLY used for naming files, not a config.
+# The script runs both LB and EGS regardless.
+STATIC_SCHEDULER_NAMES = ["LB", "EGS"]
+
 parser = argparse.ArgumentParser()
 parser.add_argument(
     "-ed",
@@ -62,8 +58,9 @@ parser.add_argument(
     "-pl",
     "--platform",
     type=str,
-    default="RPI4",
-    help="Specify the platform to run the experiment: RPI4, ODROID or QNX. The default is RPI4."
+    default="RPI4-QNX",
+    choices=["RPI4-QNX", "RPI4-Linux", "ODROID"],
+    help="Specify the platform to run the experiment: RPI4-QNX (default), RPI4-Linux, ODROID. The default is RPI4-QNX."
 )
 parser.add_argument(
     "-qd",
@@ -74,22 +71,8 @@ parser.add_argument(
 )
 
 
-def set_platform(platform):
-    if platform == "RPI4":
-        IP = credentials.IP_RPI4
-        UN = credentials.UN_RPI4
-        PW = credentials.PW_RPI4
-    elif platform == "ODROID-XU4":
-        IP = credentials.IP_ODROID
-        UN = credentials.UN_ODROID
-        PW = credentials.PW_ODROID
-    elif platform == "QNX":
-        IP = credentials.IP_QNX
-        UN = credentials.UN_QNX
-        PW = credentials.PW_QNX
-    else:
-        raise Exception("The specified platform is not supported.")
-    return IP, UN, PW, platform
+def set_ssh_info():
+    return credentials.IP, credentials.UN, credentials.PW
 
 
 def post_process_timing_precision(csv):
@@ -574,7 +557,8 @@ def generate_latex_table(program_names, program_stats, file_path):
 def main(args=None):
     # Parse arguments.
     args = parser.parse_args(args)
-    IP, PW, UN, PLATFORM = set_platform(args.platform)
+    platform = args.platform
+    IP, PW, UN = set_ssh_info()
     
     # Variable declarations
     expr_data_dirname = "experiment-data/"
@@ -583,22 +567,22 @@ def main(args=None):
     script_path = Path(__file__).resolve() # Get the path to the script
     script_dir = script_path.parent
     benchmark_dir = script_dir.parent
-    timing_benchmark_dir = benchmark_dir / "timing" / "src"
-    timing_benchmark_srcgen = benchmark_dir / "timing" / "src-gen"
+    timing_benchmark_dir = benchmark_dir / "src"
+    timing_benchmark_srcgen = benchmark_dir / "src-gen"
     
     # Create an experiment data directory, if none exist.
     expr_data_dir = benchmark_dir / expr_data_dirname
     expr_data_dir.mkdir(parents=True, exist_ok=True)
     
     # Create a timing directory, if none exist.
-    timing_dir = expr_data_dir / "timing"
+    timing_dir = expr_data_dir
     timing_dir.mkdir(exist_ok=True)
     
     # Create a directory for this experiment run.
     # Time at which the script starts
     if args.experiment_dir is None:
         time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")  # Format: Year-Month-Day_Hour-Minute-Second
-        expr_run_dir = timing_dir / (time + "-" + PLATFORM + "-" + "_".join(STATIC_SCHEDULER_NAMES) + "-" + ("_".join(SELECT_PROGRAMS) if len(SELECT_PROGRAMS) > 0 else "ALL"))
+        expr_run_dir = timing_dir / (time + "-" + platform + "-" + "_".join(STATIC_SCHEDULER_NAMES) + "-" + ("_".join(SELECT_PROGRAMS) if len(SELECT_PROGRAMS) > 0 else "ALL"))
         expr_run_dir.mkdir()
     else:
         expr_run_dir = timing_dir / args.experiment_dir
@@ -617,10 +601,10 @@ def main(args=None):
     
     if args.experiment_dir is None:
         # Prepare arguments for each run_benchmark call.
-        args_1 = ["-hn=" + IP, "-un=" + UN, "-pwd=" + PW, "-pl=" + PLATFORM, "-f=--scheduler=NP", "-dd="+str(np_dir.resolve()), "--src=timing/src", "--src-gen=timing/src-gen"]
-        args_2 = ["-hn=" + IP, "-un=" + UN, "-pwd=" + PW, "-pl=" + PLATFORM, "-f=--scheduler=STATIC", "-f=--mapper=LB", "-dd="+str(lb_dir.resolve()), "--src=timing/src", "--src-gen=timing/src-gen"]
-        args_3 = ["-hn=" + IP, "-un=" + UN, "-pwd=" + PW, "-pl=" + PLATFORM, "-f=--scheduler=STATIC", "-f=--mapper=EGS", "-dd="+str(egs_dir.resolve()), "--src=timing/src", "--src-gen=timing/src-gen"]
-        if PLATFORM == "QNX":
+        args_1 = ["-hn=" + IP, "-un=" + UN, "-pwd=" + PW, "-pl=" + platform, "-f=--scheduler=NP", "-dd="+str(np_dir.resolve()), "--src=src", "--src-gen=src-gen"]
+        args_2 = ["-hn=" + IP, "-un=" + UN, "-pwd=" + PW, "-pl=" + platform, "-f=--scheduler=STATIC", "-f=--mapper=LB", "-dd="+str(lb_dir.resolve()), "--src=src", "--src-gen=src-gen"]
+        args_3 = ["-hn=" + IP, "-un=" + UN, "-pwd=" + PW, "-pl=" + platform, "-f=--scheduler=STATIC", "-f=--mapper=EGS", "-dd="+str(egs_dir.resolve()), "--src=src", "--src-gen=src-gen"]
+        if platform == "RPI4-QNX":
             qnx_support_directory = Path(args.qnx_support_directory).resolve()
             args_1.append("-qd=" + str(qnx_support_directory))
             args_2.append("-qd=" + str(qnx_support_directory))
@@ -698,7 +682,7 @@ def main(args=None):
         df_lb_timing_precision = post_process_timing_precision(csv_lb)
         df_egs_timing_precision = post_process_timing_precision(csv_egs)
         df_combined = combine_df(df_np_timing_precision, df_lb_timing_precision, df_egs_timing_precision)
-        generate_plot_timing_precision(plots_dir, program, df_combined, PLATFORM)
+        generate_plot_timing_precision(plots_dir, program, df_combined, platform)
         
         #################################
         # Generate timing accuracy plot #
@@ -707,8 +691,8 @@ def main(args=None):
         df_lb_timing_accuracy = post_process_timing_accuracy(csv_lb)
         df_egs_timing_accuracy = post_process_timing_accuracy(csv_egs)
         df_combined = combine_df(df_np_timing_accuracy, df_lb_timing_accuracy, df_egs_timing_accuracy)
-        generate_plot_timing_accuracy(plots_dir, program, df_combined, PLATFORM, True)
-        generate_plot_timing_accuracy(plots_dir, program, df_combined, PLATFORM, False)
+        generate_plot_timing_accuracy(plots_dir, program, df_combined, platform, True)
+        generate_plot_timing_accuracy(plots_dir, program, df_combined, platform, False)
         
         # Extract outliers
         if df_np_timing_accuracy is not None:
@@ -742,13 +726,13 @@ def main(args=None):
         df_lb_reaction_exec = post_process_execution_time(csv_lb)
         df_egs_reaction_exec = post_process_execution_time(csv_egs)
         df_combined_reaction_exec = combine_df(df_np_reaction_exec, df_lb_reaction_exec, df_egs_reaction_exec)
-        generate_plot_reaction_execution_time(plots_dir, program, df_combined_reaction_exec, PLATFORM)
+        generate_plot_reaction_execution_time(plots_dir, program, df_combined_reaction_exec, platform)
         
         ####################################
         # Generate PretVM instruction plot #
         ####################################
         df_lb_vm_exec = post_process_instruction_execution_times(csv_lb)
-        generate_plot_vm_execution_time(plots_dir, program, df_lb_vm_exec, PLATFORM)
+        generate_plot_vm_execution_time(plots_dir, program, df_lb_vm_exec, platform)
 
     generate_latex_table(program_names, program_stats, expr_run_dir / "table.tex")
 

@@ -5,23 +5,11 @@
  * https://github.com/lf-lang/benchmarks-lingua-franca/blob/main/Cpp/Savina/src/concurrency/Philosophers.lf.
  */
 target C {
-    /* [[[cog
-      if (threading=="True"):
-          cog.outl("single-threaded: false,")
-          cog.outl(f"workers: {workers},")
-          cog.outl(f"scheduler: {scheduler},")
-      else:
-          cog.outl("single-threaded: true,")
-    ]]] */
-    //single-threaded: true,
-    /// [[[end]]]
-    // logging: DEBUG,
-    // build-type: Debug,
     timeout: 4800200 usec,
     workers: 2,
 }
 
-import BenchmarkRunner from "../../savina/src/BenchmarkRunner.lf";
+import BenchmarkRunner from "../lib/BenchmarkRunner.lf";
 
 preamble {=
     #include <string.h>
