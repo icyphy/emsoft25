@@ -10,6 +10,6 @@
 **/__pycache__/
 
 benchmarks/experiment-data
-# benchmarks/scripts/credentials.py
+benchmarks/scripts/credentials.py
 
 .vscode/
