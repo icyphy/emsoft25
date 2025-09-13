@@ -1,7 +1,33 @@
-# Running Timing Benchmarks Automatically
+# Performance Benchmarks
+
+We provide instructions for running the performance benchmarks on a Raspberry Pi 4 running QNX 8.0. We assume that the Raspberry Pi 4 is connected to a host machine (e.g., your macOS laptop) via Ethernet and can be `ssh` into. The benchmark python script runs on the host machine and controls the Raspberry Pi 4 using `ssh`.
+
+In [our setup](../images/rpi4-setup.jpg), we have the Raspberry Pi 4 connected to an Ubuntu machine.
+
+## Prerequisites (Raspberry Pi 4)
+
+The list of prerequisites continues, now onto the embedded platform, the Raspberry Pi 4.
+
+### 1. Install QNX 8.0
+
+Follow these official QNX tutorials to install QNX on your Raspberry Pi 4.
+- [Quick start target image (QSTI)](https://www.qnx.com/developers/docs/qnxeverywhere/com.qnx.doc.qnxeverywhere/topic/qsti/intro.html)
+- [Video: QNX Toolkit for Visual Studio Code + QNX OS 8.0 Deep Dive](https://www.youtube.com/watch?v=M02X6AqdK7M&t=2s)
+- [GitLab: Raspberry Pi with QNX 8.0 Quick Start Project](https://gitlab.com/qnx/quick-start-images/raspberry-pi-qnx-8.0-quick-start-image)
+
+After this step, you should also find a file located at `~/qnx800/qnxsdp-env.sh`. We will later use this when cross-compiling programs.
+
+
+## Prerequisites (Host Machine)
+
+### 2. C/C++ Utilities
+
+Install [make](https://www.gnu.org/software/make/) and [CMake](https://cmake.org) on your host machine.
+
+### 3. Python Dependencies
 Install python dependencies by running
 ```
-pip install -r scripts/requirements.txt
+pip install -r benchmarks/scripts/requirements.txt
 ```
 
 This script also calls `sshpass`, which can be installed on macOS via
@@ -9,16 +35,48 @@ This script also calls `sshpass`, which can be installed on macOS via
 brew install sshpass
 ```
 
-Then create a `credentials.py` in `scripts`
-```python
-IP_RPI4="<IP Address for the Raspberry Pi 4>"
-UN_RPI4="<Username for the Raspberry Pi 4>"
-PW_RPI4="<Password for the Raspberry Pi 4>"
-IP_ODROID="<IP Address for the ODROID-XU4>"
-UN_ODROID="<Username for the ODROID-XU4>"
-PW_ODROID="<Password for the ODROID-XU4>"
+Or if you are on Ubuntu
+```
+sudo apt-get update
+sudo apt-get install sshpass
 ```
 
+### 4. Lingua Franca (LF)
+
+4.1: Update all submodules in the repo.
+```
+git submodule update --init --recursive
+```
+
+4.2: install [Java 17](https://openjdk.org/projects/jdk/17/) on your host machine.
+
+4.3: Then `cd` into `lingua-franca`, run
+```
+./gradlew assemble
+```
+
+4.4: After this is done, add `lingua-franca/bin/lfc-dev` to your `PATH` variable.
+
+## How to Run
+
+Now we are ready to run the benchmarks.
+
+### Source `qnxsdp-env.sh`
+
+On your host machine, there should be a `~/qnx800/qnxsdp-env.sh`. Let's source it.
+```
+source ~/qnx800/qnxsdp-env.sh
+```
+
+### Add credentials for SSH
+
+Copy `benchmarks/scripts/credentials.template.py` to `benchmarks/scripts/credentials.py`. Fill in credentials for the embedded device in `benchmarks/scripts/credentials.py`.
+```
+cd benchmarks/scripts/
+cp credentials.template.py credentials.py
+```
+
+### Launch the script!
 Then simply run
 ```
 python scripts/experiment_timing.py
@@ -50,38 +108,3 @@ For example, to run the benchmark suite using the STATIC scheduler:
 ```
 python ../script/run_benchmark.py -hn=<Board-IP-Address> -un=<Board-Username> -pwd="<Board-Password>" -f="--scheduler=STATIC" -f="--static-scheduler=LOAD_BALANCED"
 ```
-
-# Comments about the programs
-
-LF programs which are ***not*** supported yet by the static scheduler are those with:
-- logical/physical actions, 
-- and deadlines (to be supported).
-In addition, timers are needed in order to define the hyperperiods and check for
-timing constraints.
-
-Logical actions that behave like connections should be rewritten using connections.  
-
-| LF prog.    | Inc |Timers | Deadline | After delay | Logical Action | Physical Action |
-|-------------|-----|-------|----------|-------------|----------------|-----------------|
-| ADASModel   | no  |  2    | yes      | yes         | yes            | yes             |
-| AircraftDoor| no  |  0    | -        | -           | -              | -               |
-| Alarm       | no  |  0    | -        | -           | yes            | -               |
-| CoopSchedule| yes |  1    | -        | -           | -              | -               |
-| Elelction   | no  |  0    | -        | -           | yes            | -               |
-| Elelction2  | no  |  0    | -        | yes         | -              | -               |
-| Elevator    | yes |  3    | -        | -           | yes            | -               |
-| Factorial   | yes |  1    | -        | -           | yes            | -               |
-| Fibonacci   | yes |  1    | -        | -           | yes            | -               |
-| PingPong    | no  |  0    | -        | -           | yes            | -               |
-| Pipe        | yes |  1    | -        | -           | yes            | -               |
-| ProcessMsg  | yes |  1    | -        | -           | yes            | -               |
-| ProcessSync | yes |  1    | -        | -           | -              | -               |
-| Railroad    | yes |  1    | -        | -           | yes            | -               |
-| Ring        | no  |  0    | -        | yes         | yes            | -               |
-| RoadsideUnit| no  |  0    | -        | -           | yes            | -               |
-| SafeSend    | no  |  0    | -        | yes         | yes            | -               |
-| Subway      | no  |  0    | -        | -           | yes            | -               |
-| Thermostat  | yes |  1    | -        | -           | yes            | -               |
-| TrafficLight| yes |  2    | -        | -           | yes            | -               |
-| TrainDoor   | no  |  0    | -        | yes         | -              | -               |
-| UnsafeSend  | no  |  0    | -        | yes         | yes            | -               |
