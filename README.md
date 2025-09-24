@@ -1,5 +1,9 @@
 # Quasi-Static Scheduling for Deterministic Timed Concurrent Models on Multi-Core Hardware
 
+Shaokai Lin, Erling Jellum*, Mirco Theile*, Tassilo Tanneberger*, Binqi Sun*, Chadlia Jerad, Yimo Xu, Guangyu Feng, Magnus Mæhlum, Jian-Jia Chen, Martin Schoeberl, Linh Thi Xuan Phan, Jeronimo Castrillon, Sanjit A. Seshia, Edward A. Lee
+
+\* Equal contribution
+
 ### Research Question
 Real-time embedded software aims to be predictable and efficient to run. To this end, _(quasi-)static scheduling_ has been applied extensively on a variety of concurrent models of computation, including [SDF](https://en.wikipedia.org/wiki/Synchronous_Data_Flow), [BDF](https://ptolemy.berkeley.edu/ptolemyclassic/almagest/docs/user/html/domains.doc5.html), [SADF](https://ieeexplore.ieee.org/document/6045491), and [LET](https://cs.uni-salzburg.at/~anas/papers/ARTS-chapter.pdf).
 These existing techniques for generating schedules at compile time are strikingly similar across models.
