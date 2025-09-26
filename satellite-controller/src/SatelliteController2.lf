@@ -7,7 +7,7 @@ preamble {=
   typedef uint32_t IntArr3;  
 =}
 reactor Gyroscope {
-  timer t(0 s, 10 ms)
+  timer t(1 s, 10 ms)
   output out: IntArr3
   @wcet("1 ms")
   reaction(t) -> out {= =}
@@ -18,7 +18,7 @@ reactor Processing {
   input i3: IntArr3
   output o1: IntArr3
   output o2: IntArr3
-  timer t(0 s, 15 ms)
+  timer t(1 s, 15 ms)
   @wcet("1 ms")
   reaction(i1, i2, i3)  {= =}
   @wcet("3 ms")
@@ -31,9 +31,12 @@ reactor UserInput {
 reactor Controller {
   input position: IntArr3
   input velocity: IntArr3
+  input desired_angle: IntArr3
   output out: IntArr3
+  reaction(desired_angle) {= =}
   @wcet("4 ms")
   reaction(position, velocity) -> out {= =} 
+  reaction(shutdown)  {= =}
 }
 reactor Motor {
   input in:IntArr3
@@ -44,6 +47,7 @@ main reactor {
   gyro1 = new Gyroscope()
   gyro2 = new Gyroscope()
   gyro3 = new Gyroscope()
+  userInput = new UserInput()
   processing = new Processing()
   controller = new Controller()
   motor = new Motor()
@@ -52,5 +56,6 @@ main reactor {
   gyro3.out -> processing.i3
   processing.o1 -> controller.position
   processing.o2 -> controller.velocity
+  userInput.out -> controller.desired_angle
   controller.out -> motor.in
 }
