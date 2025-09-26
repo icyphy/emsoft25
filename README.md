@@ -38,3 +38,25 @@ In this artifacts repository, you will find how to:
 Please submit any issues to the issues tab, or contact Shaokai Lin at <shaokai@berkeley.edu>.
 
 Paper link: https://dl.acm.org/doi/10.1145/3762653
+
+If you find the paper useful, please cite it as follows:
+```
+@article{lin2025quasistatic,
+  author = {Lin, Shaokai and Jellum, Erling and Theile, Mirco and Tanneberger, Tassilo and Sun, Binqi and Jerad, Chadlia and Xu, Yimo and Feng, Guangyu and M\ae{}hlum, Magnus and Chen, Jian-Jia and Schoeberl, Martin and Phan, Linh Thi Xuan and Castrillon, Jeronimo and Seshia, Sanjit A. and Lee, Edward A.},
+  title = {Quasi-Static Scheduling for Deterministic Timed Concurrent Models on Multi-Core Hardware},
+  year = {2025},
+  issue_date = {November 2025},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  volume = {24},
+  number = {5s},
+  issn = {1539-9087},
+  url = {https://doi.org/10.1145/3762653},
+  doi = {10.1145/3762653},
+  journal = {ACM Trans. Embed. Comput. Syst.},
+  month = sep,
+  articleno = {150},
+  numpages = {25},
+  keywords = {Quasi-Static Scheduling, Concurrency, DAG Scheduling, Predictability}
+}
+```
