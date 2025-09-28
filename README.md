@@ -33,7 +33,7 @@ To perform quasi-static scheduling on this LF model, our extended LF compiler ge
 
 In this artifacts repository, you will find how to:
 1. Run the performance benchmark: [README](benchmarks/README.md),
-2. Run the satellite attitude controller case study: [README](satellite-controller/README.md).
+2. Run the case study: [README](case-study/README.md).
 
 Please submit any issues to the issues tab, or contact Shaokai Lin at <shaokai@berkeley.edu>.
 
