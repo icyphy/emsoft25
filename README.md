@@ -63,4 +63,4 @@ If you find the paper useful, please cite it as follows:
 
 ### Follow-up Work
 
-- This technique in this work has recently been used in NASA JPL's [F Prime](https://github.com/nasa/fprime) framework.  [[Code](https://github.com/lsk567/fpp-to-phaser)]
+- The technique in this work has recently been demonstrated in NASA JPL's [F Prime](https://github.com/nasa/fprime) framework.  [[Code](https://github.com/lsk567/fpp-to-phaser)]
