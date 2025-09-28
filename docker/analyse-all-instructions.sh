@@ -10,5 +10,5 @@ make list-symbols file=pretvm-instructions/inst_lib \
 | grep -e "  cycles: " -e "analysis-entry:" >> $result_file
 
 
-./cycles_to_nsec.sh $result_file $result_file_finalresult_file_final="result_pretvm_instructions.txt"
+./cycles_to_nsec.sh $result_file $result_file_final
 rm $result_file
