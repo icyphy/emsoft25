@@ -1,0 +1,86 @@
+[
+    {
+        "Group":"producer, 0",
+        "Dataset":"DY",
+        "mean":3200.6344086022,
+        "std":426.5089270931,
+        "max":5555
+    },
+    {
+        "Group":"producer, 0",
+        "Dataset":"EGS",
+        "mean":774.5567010309,
+        "std":245.3627828115,
+        "max":2167
+    },
+    {
+        "Group":"producer, 0",
+        "Dataset":"LB",
+        "mean":771.3195876289,
+        "std":229.3134475265,
+        "max":1944
+    },
+    {
+        "Group":"worker_0, 0",
+        "Dataset":"DY",
+        "mean":6572.0430107527,
+        "std":616.3671780116,
+        "max":10111
+    },
+    {
+        "Group":"worker_0, 0",
+        "Dataset":"EGS",
+        "mean":3132.8762886598,
+        "std":924.1452386049,
+        "max":7426
+    },
+    {
+        "Group":"worker_0, 0",
+        "Dataset":"LB",
+        "mean":2329.1237113402,
+        "std":608.7160027764,
+        "max":5463
+    },
+    {
+        "Group":"worker_1, 0",
+        "Dataset":"DY",
+        "mean":5896.4408602151,
+        "std":603.8205258541,
+        "max":9352
+    },
+    {
+        "Group":"worker_1, 0",
+        "Dataset":"EGS",
+        "mean":3217.4226804124,
+        "std":713.5862455912,
+        "max":6500
+    },
+    {
+        "Group":"worker_1, 0",
+        "Dataset":"LB",
+        "mean":3342.8453608247,
+        "std":662.7344292809,
+        "max":6333
+    },
+    {
+        "Group":"worker_2, 0",
+        "Dataset":"DY",
+        "mean":5188.5376344086,
+        "std":532.478139154,
+        "max":8241
+    },
+    {
+        "Group":"worker_2, 0",
+        "Dataset":"EGS",
+        "mean":2982.8350515464,
+        "std":833.0962039336,
+        "max":6389
+    },
+    {
+        "Group":"worker_2, 0",
+        "Dataset":"LB",
+        "mean":3262.7525773196,
+        "std":741.8311806903,
+        "max":5611
+    }
+]

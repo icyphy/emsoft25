@@ -1,0 +1,44 @@
+[
+    {
+        "Group":"counter, 1",
+        "Dataset":"DY",
+        "mean":8489.043263288,
+        "std":2694.4850934837,
+        "max":98500
+    },
+    {
+        "Group":"counter, 1",
+        "Dataset":"EGS",
+        "mean":1957.8688195303,
+        "std":191.8593660035,
+        "max":9204
+    },
+    {
+        "Group":"counter, 1",
+        "Dataset":"LB",
+        "mean":1978.6200556242,
+        "std":203.9033335186,
+        "max":7759
+    },
+    {
+        "Group":"producer, 2",
+        "Dataset":"DY",
+        "mean":3131.5849027478,
+        "std":327.6487288033,
+        "max":14945
+    },
+    {
+        "Group":"producer, 2",
+        "Dataset":"EGS",
+        "mean":585.618400741,
+        "std":102.4821095761,
+        "max":4333
+    },
+    {
+        "Group":"producer, 2",
+        "Dataset":"LB",
+        "mean":843.618400741,
+        "std":126.5559200861,
+        "max":4926
+    }
+]

@@ -1,0 +1,45 @@
+Start time:, 5965674045333
+End time:, 5968554293963
+Total time:, 2880248630
+
+Total Event Occurrences
+Reaction starts, 86454
+Reaction ends, 86454
+Schedule called, 14401
+Worker wait starts, 86442
+Worker wait ends, 86442
+Scheduler advancing time starts, 14403
+Scheduler advancing time ends, 14403
+
+Reaction Executions
+Reactor, Reaction, Occurrences, Total Time, Pct Total Time, Avg Time, Max Time, Min Time
+arbitrator, 0, 1, 593, 0.000021, 593, 593, 593
+arbitrator, 1, 12, 5444, 0.000189, 453, 482, 371
+arbitrator, 2, 14388, 5932223, 0.205962, 412, 2963, 333
+arbitrator, 3, 14388, 5577715, 0.193654, 387, 1426, 314
+arbitrator, 4, 24, 231761, 0.008047, 9656, 20649, 388
+arbitrator, 5, 7200, 1698655, 0.058976, 235, 667, 185
+philosopher0, 0, 12, 4907, 0.000170, 408, 667, 333
+philosopher0, 1, 3600, 1644559, 0.057098, 456, 1056, 370
+philosopher0, 2, 3588, 1290222, 0.044796, 359, 722, 314
+philosopher1, 0, 12, 4889, 0.000170, 407, 445, 352
+philosopher1, 1, 3600, 1446739, 0.050230, 401, 1278, 352
+philosopher1, 2, 10788, 3942057, 0.136865, 365, 2852, 314
+runner, 0, 1, 4500, 0.000156, 4500, 4500, 4500
+runner, 1, 13, 42222, 0.001466, 3247, 4481, 2518
+runner, 2, 12, 452833, 0.015722, 37736, 90203, 30982
+runner, 3, 1, 29185, 0.001013, 29185, 29185, 29185
+broadcast, 0, 12, 6924, 0.000240, 577, 777, 445
+delay, 0, 14388, 6668864, 0.231538, 463, 6944, 370
+delay, 1, 14388, 38104662, 1.322964, 2648, 102945, 2092
+delay_0, 0, 13, 9482, 0.000329, 729, 1037, 481
+delay_0, 1, 13, 68686, 0.002385, 5283, 8926, 3944
+
+Schedule calls
+Trigger, Occurrences
+delay.act, 14388
+
+Workers Waiting
+Worker, Waiting On, Occurrences, Total Time, Pct Total Time, Avg Time, Max Time, Min Time
+0, reaction queue, 53135, 2768473392, 96.119250, 52102, 120022852, 278
+1, reaction queue, 33307, 2799078301, 97.181829, 84038, 120024000, 240

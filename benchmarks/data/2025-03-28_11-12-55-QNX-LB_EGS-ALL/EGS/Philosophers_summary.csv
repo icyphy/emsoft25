@@ -1,0 +1,27 @@
+Start time:, 6320464351778
+End time:, 6323344590352
+Total time:, 2880238574
+
+Total Event Occurrences
+Reaction starts, 57652
+Reaction ends, 57652
+
+Reaction Executions
+Reactor, Reaction, Occurrences, Total Time, Pct Total Time, Avg Time, Max Time, Min Time
+arbitrator, 0, 1, 630, 0.000022, 630, 630, 630
+arbitrator, 1, 12, 4869, 0.000169, 405, 592, 277
+arbitrator, 2, 14388, 5853874, 0.203243, 406, 1796, 259
+arbitrator, 3, 14388, 5122912, 0.177864, 356, 1129, 222
+arbitrator, 4, 24, 206721, 0.007177, 8613, 20130, 241
+arbitrator, 5, 7200, 1554143, 0.053959, 215, 500, 203
+philosopher0, 0, 12, 4388, 0.000152, 365, 519, 333
+philosopher0, 1, 3600, 1416807, 0.049191, 393, 815, 278
+philosopher0, 2, 3588, 1271913, 0.044160, 354, 704, 241
+philosopher1, 0, 12, 5221, 0.000181, 435, 574, 352
+philosopher1, 1, 3600, 1434993, 0.049822, 398, 741, 370
+philosopher1, 2, 10788, 3817098, 0.132527, 353, 667, 223
+runner, 0, 1, 4907, 0.000170, 4907, 4907, 4907
+runner, 1, 13, 39964, 0.001388, 3074, 5000, 2444
+runner, 2, 12, 353501, 0.012273, 29458, 78334, 19555
+runner, 3, 1, 33408, 0.001160, 33408, 33408, 33408
+broadcast, 0, 12, 5763, 0.000200, 480, 722, 389

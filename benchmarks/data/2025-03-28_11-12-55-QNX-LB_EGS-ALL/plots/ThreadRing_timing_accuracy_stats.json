@@ -1,0 +1,107 @@
+[
+    {
+        "Group":"loopOpener, 0",
+        "Dataset":"DY",
+        "mean":3773.0256410256,
+        "std":734.6104714667,
+        "max":6388
+    },
+    {
+        "Group":"loopOpener, 0",
+        "Dataset":"EGS",
+        "mean":387.2051282051,
+        "std":157.5604900516,
+        "max":1166
+    },
+    {
+        "Group":"loopOpener, 0",
+        "Dataset":"LB",
+        "mean":422.7564102564,
+        "std":168.706013865,
+        "max":1166
+    },
+    {
+        "Group":"loopOpener, 1",
+        "Dataset":"DY",
+        "mean":10116.8974358974,
+        "std":884.3341994727,
+        "max":13074
+    },
+    {
+        "Group":"loopOpener, 1",
+        "Dataset":"EGS",
+        "mean":3596.5641025641,
+        "std":361.2590389736,
+        "max":5148
+    },
+    {
+        "Group":"loopOpener, 1",
+        "Dataset":"LB",
+        "mean":4004.0128205128,
+        "std":479.8307194355,
+        "max":5888
+    },
+    {
+        "Group":"worker0, 0",
+        "Dataset":"DY",
+        "mean":5358.2820512821,
+        "std":769.3741071914,
+        "max":8111
+    },
+    {
+        "Group":"worker0, 0",
+        "Dataset":"EGS",
+        "mean":1251.7564102564,
+        "std":282.4535445494,
+        "max":2425
+    },
+    {
+        "Group":"worker0, 0",
+        "Dataset":"LB",
+        "mean":1454.8076923077,
+        "std":379.6024939941,
+        "max":3037
+    },
+    {
+        "Group":"worker1, 0",
+        "Dataset":"DY",
+        "mean":6970.1025641026,
+        "std":830.0352142388,
+        "max":9907
+    },
+    {
+        "Group":"worker1, 0",
+        "Dataset":"EGS",
+        "mean":2039.641025641,
+        "std":313.8611229968,
+        "max":3277
+    },
+    {
+        "Group":"worker1, 0",
+        "Dataset":"LB",
+        "mean":2368.2692307692,
+        "std":443.6730009458,
+        "max":4166
+    },
+    {
+        "Group":"worker2, 0",
+        "Dataset":"DY",
+        "mean":8553.7179487179,
+        "std":862.6235262183,
+        "max":11481
+    },
+    {
+        "Group":"worker2, 0",
+        "Dataset":"EGS",
+        "mean":2828.2179487179,
+        "std":339.9021878953,
+        "max":4129
+    },
+    {
+        "Group":"worker2, 0",
+        "Dataset":"LB",
+        "mean":3192.2692307692,
+        "std":470.0282299639,
+        "max":5092
+    }
+]

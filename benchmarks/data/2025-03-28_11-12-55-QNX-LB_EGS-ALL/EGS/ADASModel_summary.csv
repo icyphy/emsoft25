@@ -1,0 +1,22 @@
+Start time:, 6363088325944
+End time:, 6364090328833
+Total time:, 1002002889
+
+Total Event Occurrences
+Reaction starts, 318
+Reaction ends, 318
+Schedule called, 4
+
+Reaction Executions
+Reactor, Reaction, Occurrences, Total Time, Pct Total Time, Avg Time, Max Time, Min Time
+c, 0, 59, 21649, 0.002161, 366, 574, 241
+l, 0, 30, 11497, 0.001147, 383, 814, 333
+p, 0, 59, 21783, 0.002174, 369, 593, 259
+p, 1, 57, 24313, 0.002426, 426, 1055, 370
+b, 0, 56, 12797, 0.001277, 228, 444, 203
+d, 0, 57, 12111, 0.001209, 212, 278, 185
+
+Schedule calls
+Trigger, Occurrences
+c.t, 2
+l.t, 2

@@ -1,0 +1,5 @@
+Event,Reactor,Source,Destination,Elapsed Logical Time,Microstep,Elapsed Physical Time,Trigger,Extra Delay,Lag,Group,Dataset
+Reaction starts,ping,0,1,141000000,0,141005445, NO TRIGGER,0,5445,"ping, 1",LB
+Reaction starts,ping,0,1,1153000000,0,1153005297, NO TRIGGER,0,5297,"ping, 1",LB
+Reaction starts,ping,0,1,11649000000,0,11649006426, NO TRIGGER,0,6426,"ping, 1",LB
+Reaction starts,pong,0,0,11649000000,0,11649005167, NO TRIGGER,0,5167,"pong, 0",LB

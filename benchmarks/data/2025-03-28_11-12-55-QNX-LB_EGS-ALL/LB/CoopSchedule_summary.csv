@@ -1,0 +1,26 @@
+Start time:, 6096634699370
+End time:, 6101634743722
+Total time:, 5000044352
+
+Total Event Occurrences
+Reaction starts, 3011
+Reaction ends, 3011
+Schedule called, 2
+
+Reaction Executions
+Reactor, Reaction, Occurrences, Total Time, Pct Total Time, Avg Time, Max Time, Min Time
+trigger, 0, 501, 322356, 0.006447, 643, 1241, 537
+task1, 0, 501, 109786, 0.002196, 219, 483, 185
+task1, 1, 1, 4629, 0.000093, 4629, 4629, 4629
+task2, 0, 501, 98853, 0.001977, 197, 296, 185
+task2, 1, 1, 13186, 0.000264, 13186, 13186, 13186
+task3, 0, 501, 161795, 0.003236, 322, 482, 185
+task3, 1, 1, 22907, 0.000458, 22907, 22907, 22907
+task4, 0, 501, 166954, 0.003339, 333, 685, 222
+task4, 1, 1, 5926, 0.000119, 5926, 5926, 5926
+task5, 0, 501, 140458, 0.002809, 280, 575, 204
+task5, 1, 1, 29945, 0.000599, 29945, 29945, 29945
+
+Schedule calls
+Trigger, Occurrences
+trigger.t, 2

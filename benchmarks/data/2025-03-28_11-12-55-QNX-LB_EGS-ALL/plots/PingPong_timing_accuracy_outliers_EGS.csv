@@ -1,0 +1,3 @@
+Event,Reactor,Source,Destination,Elapsed Logical Time,Microstep,Elapsed Physical Time,Trigger,Extra Delay,Lag,Group,Dataset
+Reaction starts,ping,0,1,5001000000,0,5001005796, NO TRIGGER,0,5796,"ping, 1",EGS
+Reaction starts,pong,0,0,5001000000,0,5001004703, NO TRIGGER,0,4703,"pong, 0",EGS

@@ -1,0 +1,6 @@
+Event,Reactor,Source,Destination,Elapsed Logical Time,Microstep,Elapsed Physical Time,Trigger,Extra Delay,Lag,Group,Dataset
+Reaction starts,worker_0,0,0,30000000,0,30010111, NO TRIGGER,-9223372036854775808,10111,"worker_0, 0",DY
+Reaction starts,worker_0,0,0,120000000,0,120009759, NO TRIGGER,-9223372036854775808,9759,"worker_0, 0",DY
+Reaction starts,worker_0,0,0,294000000,0,294008574, NO TRIGGER,-9223372036854775808,8574,"worker_0, 0",DY
+Reaction starts,worker_1,0,0,30000000,0,30009352, NO TRIGGER,-9223372036854775808,9352,"worker_1, 0",DY
+Reaction starts,worker_1,0,0,120000000,0,120009092, NO TRIGGER,-9223372036854775808,9092,"worker_1, 0",DY

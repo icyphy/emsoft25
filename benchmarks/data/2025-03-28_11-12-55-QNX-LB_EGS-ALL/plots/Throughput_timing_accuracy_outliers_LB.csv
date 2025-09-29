@@ -1,0 +1,2 @@
+Event,Reactor,Source,Destination,Elapsed Logical Time,Microstep,Elapsed Physical Time,Trigger,Extra Delay,Lag,Group,Dataset
+Reaction starts,worker_1,0,0,75000000,0,75006333, NO TRIGGER,0,6333,"worker_1, 0",LB

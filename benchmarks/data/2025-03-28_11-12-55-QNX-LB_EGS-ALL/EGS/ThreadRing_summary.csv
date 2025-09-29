@@ -1,0 +1,19 @@
+Start time:, 6316230053019
+End time:, 6320230057630
+Total time:, 4000004611
+
+Total Event Occurrences
+Reaction starts, 399
+Reaction ends, 399
+
+Reaction Executions
+Reactor, Reaction, Occurrences, Total Time, Pct Total Time, Avg Time, Max Time, Min Time
+init, 0, 1, 407, 0.000010, 407, 407, 407
+runner, 0, 1, 3815, 0.000095, 3815, 3815, 3815
+runner, 1, 1, 7703, 0.000193, 7703, 7703, 7703
+loopOpener, 0, 79, 31264, 0.000782, 395, 685, 333
+loopOpener, 1, 79, 28869, 0.000722, 365, 592, 333
+loopOpener, 2, 1, 7241, 0.000181, 7241, 7241, 7241
+worker0, 0, 79, 28713, 0.000718, 363, 592, 278
+worker1, 0, 79, 28410, 0.000710, 359, 592, 259
+worker2, 0, 79, 28847, 0.000721, 365, 593, 241

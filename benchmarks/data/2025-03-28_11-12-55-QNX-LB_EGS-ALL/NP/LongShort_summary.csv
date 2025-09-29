@@ -1,0 +1,26 @@
+Start time:, 5988102541259
+End time:, 5996104780926
+Total time:, 8002239667
+
+Total Event Occurrences
+Reaction starts, 68
+Reaction ends, 68
+Schedule called, 68
+Worker wait starts, 68
+Worker wait ends, 68
+Scheduler advancing time starts, 51
+Scheduler advancing time ends, 51
+
+Reaction Executions
+Reactor, Reaction, Occurrences, Total Time, Pct Total Time, Avg Time, Max Time, Min Time
+l, 0, 17, 4930010536, 61.607884, 290000619, 290001074, 290000444
+s, 0, 51, 4590028466, 57.359298, 90000558, 90000945, 90000352
+
+Schedule calls
+Trigger, Occurrences
+l.t, 17
+
+Workers Waiting
+Worker, Waiting On, Occurrences, Total Time, Pct Total Time, Avg Time, Max Time, Min Time
+0, reaction queue, 33, 3420334908, 42.742220, 103646512, 380040741, 1870
+1, reaction queue, 35, 3040316986, 37.993326, 86866199, 380031389, 1630

@@ -1,0 +1,40 @@
+Start time:, 5996393493148
+End time:, 6009393504926
+Total time:, 13000011778
+
+Total Event Occurrences
+Reaction starts, 26015
+Reaction ends, 26015
+Schedule called, 6500
+Worker wait starts, 26015
+Worker wait ends, 26015
+Scheduler advancing time starts, 6501
+Scheduler advancing time ends, 6501
+
+Reaction Executions
+Reactor, Reaction, Occurrences, Total Time, Pct Total Time, Avg Time, Max Time, Min Time
+producer, 0, 6, 2926, 0.000023, 487, 519, 407
+producer, 1, 7, 3131, 0.000024, 447, 574, 389
+producer, 2, 6487, 2580820, 0.019852, 397, 667, 278
+producer, 3, 6, 78257, 0.000602, 13042, 14148, 11592
+runner, 0, 1, 2741, 0.000021, 2741, 2741, 2741
+runner, 1, 7, 26167, 0.000201, 3738, 4092, 3352
+runner, 2, 6, 176851, 0.001360, 29475, 32018, 27222
+counter, 0, 6, 2908, 0.000022, 484, 593, 426
+counter, 1, 6481, 1237852, 0.009522, 190, 500, 185
+counter, 2, 7, 1462, 0.000011, 208, 222, 203
+delay, 0, 6, 4742, 0.000036, 790, 1037, 630
+delay, 1, 6, 20555, 0.000158, 3425, 3759, 3056
+delay_0, 0, 6487, 2905129, 0.022347, 447, 1092, 389
+delay_0, 1, 6488, 16104697, 0.123882, 2482, 92148, 2092
+delay_1, 0, 7, 3592, 0.000028, 513, 574, 370
+delay_1, 1, 7, 40518, 0.000312, 5788, 10889, 4388
+
+Schedule calls
+Trigger, Occurrences
+delay.act, 6
+delay_0.act, 6487
+
+Workers Waiting
+Worker, Waiting On, Occurrences, Total Time, Pct Total Time, Avg Time, Max Time, Min Time
+0, reaction queue, 26015, 12946091962, 99.585233, 497639, 2000093, 222

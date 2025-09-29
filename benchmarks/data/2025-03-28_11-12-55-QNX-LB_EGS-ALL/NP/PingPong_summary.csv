@@ -1,0 +1,38 @@
+Start time:, 5975810776685
+End time:, 5987823885759
+Total time:, 12013109074
+
+Total Event Occurrences
+Reaction starts, 60065
+Reaction ends, 60065
+Schedule called, 12013
+Worker wait starts, 60053
+Worker wait ends, 60053
+Scheduler advancing time starts, 12015
+Scheduler advancing time ends, 12015
+
+Reaction Executions
+Reactor, Reaction, Occurrences, Total Time, Pct Total Time, Avg Time, Max Time, Min Time
+runner, 0, 1, 3481, 0.000029, 3481, 3481, 3481
+runner, 1, 13, 100314, 0.000835, 7716, 57444, 3241
+runner, 2, 12, 490760, 0.004085, 40896, 45167, 37333
+runner, 3, 1, 35019, 0.000292, 35019, 35019, 35019
+pong, 0, 12000, 4294711, 0.035750, 357, 1018, 240
+pong, 1, 12, 26186, 0.000218, 2182, 2685, 1815
+ping, 0, 12000, 4313315, 0.035905, 359, 630, 222
+ping, 1, 12000, 18045819, 0.150218, 1503, 13706685, 222
+delay, 0, 13, 8630, 0.000072, 663, 815, 519
+delay, 1, 13, 65222, 0.000543, 5017, 9593, 3723
+delay_0, 0, 11988, 5404406, 0.044988, 450, 1592, 333
+delay_0, 1, 11988, 30236518, 0.251696, 2522, 108444, 2130
+delay_1, 0, 12, 8538, 0.000071, 711, 870, 574
+delay_1, 1, 12, 36114, 0.000301, 3009, 3611, 2741
+
+Schedule calls
+Trigger, Occurrences
+delay.act, 13
+delay_0.act, 11988
+
+Workers Waiting
+Worker, Waiting On, Occurrences, Total Time, Pct Total Time, Avg Time, Max Time, Min Time
+0, reaction queue, 60053, 11891757874, 98.989844, 198021, 13805093, 222

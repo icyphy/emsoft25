@@ -1,0 +1,2 @@
+Event,Reactor,Source,Destination,Elapsed Logical Time,Microstep,Elapsed Physical Time,Trigger,Extra Delay,Lag,Group,Dataset
+Reaction starts,task2,1,0,290000000,0,290004519, NO TRIGGER,0,4519,"task2, 0",LB

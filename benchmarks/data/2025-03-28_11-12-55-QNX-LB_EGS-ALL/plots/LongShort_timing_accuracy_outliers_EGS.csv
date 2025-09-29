@@ -1,0 +1,3 @@
+Event,Reactor,Source,Destination,Elapsed Logical Time,Microstep,Elapsed Physical Time,Trigger,Extra Delay,Lag,Group,Dataset
+Reaction starts,s,1,0,100000000,0,101951093, NO TRIGGER,0,1951093,"s, 0",EGS
+Reaction starts,s,1,0,300000000,0,301951927, NO TRIGGER,0,1951927,"s, 0",EGS

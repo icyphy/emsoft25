@@ -1,0 +1,170 @@
+[
+    {
+        "Group":"arbitrator, 2",
+        "Dataset":"DY",
+        "mean":73046.8901252712,
+        "std":790030.5154864182,
+        "max":13719593
+    },
+    {
+        "Group":"arbitrator, 2",
+        "Dataset":"EGS",
+        "mean":1035.1490657149,
+        "std":76.1543134536,
+        "max":2796
+    },
+    {
+        "Group":"arbitrator, 2",
+        "Dataset":"LB",
+        "mean":1363.3527188747,
+        "std":106.488295881,
+        "max":3037
+    },
+    {
+        "Group":"arbitrator, 3",
+        "Dataset":"DY",
+        "mean":79556.8617021277,
+        "std":797909.6970371788,
+        "max":13730297
+    },
+    {
+        "Group":"arbitrator, 3",
+        "Dataset":"EGS",
+        "mean":3408.8903275476,
+        "std":405.4860902088,
+        "max":9833
+    },
+    {
+        "Group":"arbitrator, 3",
+        "Dataset":"LB",
+        "mean":3948.6047032475,
+        "std":317.5026813111,
+        "max":8982
+    },
+    {
+        "Group":"arbitrator, 4",
+        "Dataset":"DY",
+        "mean":12217.6956521739,
+        "std":5414.6996931315,
+        "max":17797
+    },
+    {
+        "Group":"arbitrator, 4",
+        "Dataset":"EGS",
+        "mean":4044.9130434783,
+        "std":696.4104662836,
+        "max":4815
+    },
+    {
+        "Group":"arbitrator, 4",
+        "Dataset":"LB",
+        "mean":4835.9565217391,
+        "std":456.2664172151,
+        "max":5500
+    },
+    {
+        "Group":"arbitrator, 5",
+        "Dataset":"DY",
+        "mean":83731.4325874126,
+        "std":797899.6768224487,
+        "max":13748630
+    },
+    {
+        "Group":"arbitrator, 5",
+        "Dataset":"EGS",
+        "mean":4537.1639160839,
+        "std":740.0380633024,
+        "max":24018
+    },
+    {
+        "Group":"arbitrator, 5",
+        "Dataset":"LB",
+        "mean":5444.6268531469,
+        "std":655.6314032446,
+        "max":24759
+    },
+    {
+        "Group":"philosopher0, 1",
+        "Dataset":"DY",
+        "mean":147815.0490140845,
+        "std":1127743.5591861755,
+        "max":13725760
+    },
+    {
+        "Group":"philosopher0, 1",
+        "Dataset":"EGS",
+        "mean":2879.4473239437,
+        "std":155.9280325156,
+        "max":5241
+    },
+    {
+        "Group":"philosopher0, 1",
+        "Dataset":"LB",
+        "mean":2591.8329577465,
+        "std":142.9298053593,
+        "max":4222
+    },
+    {
+        "Group":"philosopher0, 2",
+        "Dataset":"DY",
+        "mean":148876.0373092142,
+        "std":1106924.9840142459,
+        "max":13568093
+    },
+    {
+        "Group":"philosopher0, 2",
+        "Dataset":"EGS",
+        "mean":2965.3569813454,
+        "std":106.488207017,
+        "max":5185
+    },
+    {
+        "Group":"philosopher0, 2",
+        "Dataset":"LB",
+        "mean":2723.882419446,
+        "std":156.3341417993,
+        "max":4852
+    },
+    {
+        "Group":"philosopher1, 1",
+        "Dataset":"DY",
+        "mean":4763.9736037788,
+        "std":313.0744478875,
+        "max":11556
+    },
+    {
+        "Group":"philosopher1, 1",
+        "Dataset":"EGS",
+        "mean":1899.9752709086,
+        "std":114.1982477958,
+        "max":4685
+    },
+    {
+        "Group":"philosopher1, 1",
+        "Dataset":"LB",
+        "mean":2426.9916643512,
+        "std":138.7958436,
+        "max":3852
+    },
+    {
+        "Group":"philosopher1, 2",
+        "Dataset":"DY",
+        "mean":100296.9919543456,
+        "std":912379.9274321921,
+        "max":13728389
+    },
+    {
+        "Group":"philosopher1, 2",
+        "Dataset":"EGS",
+        "mean":1978.4297876321,
+        "std":108.1410516259,
+        "max":4092
+    },
+    {
+        "Group":"philosopher1, 2",
+        "Dataset":"LB",
+        "mean":2658.6789222565,
+        "std":145.8020110557,
+        "max":4574
+    }
+]

@@ -1,0 +1,10 @@
+Event,Reactor,Source,Destination,Elapsed Logical Time,Microstep,Elapsed Physical Time,Trigger,Extra Delay,Lag,Group,Dataset
+Reaction starts,counter,0,1,22000000,0,22004037, NO TRIGGER,0,4037,"counter, 1",LB
+Reaction starts,counter,0,1,190000000,0,190004111, NO TRIGGER,0,4111,"counter, 1",LB
+Reaction starts,counter,0,1,1282000000,0,1282003630, NO TRIGGER,0,3630,"counter, 1",LB
+Reaction starts,counter,0,1,2226000000,0,2226003778, NO TRIGGER,0,3778,"counter, 1",LB
+Reaction starts,counter,0,1,3646000000,0,3646007759, NO TRIGGER,0,7759,"counter, 1",LB
+Reaction starts,counter,0,1,3878000000,0,3878004333, NO TRIGGER,0,4333,"counter, 1",LB
+Reaction starts,counter,0,1,4422000000,0,4422004389, NO TRIGGER,0,4389,"counter, 1",LB
+Reaction starts,counter,0,1,7562000000,0,7562003926, NO TRIGGER,0,3926,"counter, 1",LB
+Reaction starts,producer,0,2,3646000000,0,3646004926, NO TRIGGER,0,4926,"producer, 2",LB
