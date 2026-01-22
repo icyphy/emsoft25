@@ -4,3 +4,6 @@
 [submodule "flexpret"]
 	path = flexpret
 	url = https://github.com/pretis/flexpret.git
+[submodule "edge-generation-scheduler"]
+	path = edge-generation-scheduler
+	url = https://github.com/binqi-sun/edge-generation-scheduler.git
