@@ -45,7 +45,7 @@ jobs:
       run: |
         cd lingua-franca/core/src/main/resources/lib/c/reactor-c/util/tracing
         make trace_to_csv trace_to_chrome
-        sudo make install
+        sudo cp trace_to_csv trace_to_chrome /usr/local/bin/
 
     - name: Add lfc to PATH
       run: |
