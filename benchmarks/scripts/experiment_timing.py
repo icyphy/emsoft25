@@ -13,8 +13,8 @@ import shutil
 import imageio
 
 # NOTE: Ensure that there is a credentials.py that defines the IP, username, and
-# password of the target platform.
-import credentials
+# password of the target platform (only needed for remote mode).
+# import credentials  # Imported conditionally in main() when not in local mode
 
 ################## CONFIGS ##################
 
@@ -68,6 +68,19 @@ parser.add_argument(
     type=str,
     default="qnx/low_level_platform",
     help="Specify the directory containing QNX support files."
+)
+parser.add_argument(
+    "-l",
+    "--local",
+    action="store_true",
+    help="Run benchmarks locally instead of on a remote embedded device."
+)
+parser.add_argument(
+    "-s",
+    "--select",
+    type=str,
+    action='append',
+    help="Select a list of programs to run instead of the entire directory (--select can be specified multiple times). No .lf extension is needed.",
 )
 
 
@@ -558,7 +571,14 @@ def main(args=None):
     # Parse arguments.
     args = parser.parse_args(args)
     platform = args.platform
-    IP, PW, UN = set_ssh_info()
+
+    # Conditionally import credentials and set SSH info (only for remote mode)
+    if not args.local and args.experiment_dir is None:
+        import credentials
+        globals()['credentials'] = credentials
+        IP, UN, PW = set_ssh_info()
+    else:
+        IP, UN, PW = None, None, None
     
     # Variable declarations
     expr_data_dirname = "experiment-data/"
@@ -579,10 +599,11 @@ def main(args=None):
     timing_dir.mkdir(exist_ok=True)
     
     # Create a directory for this experiment run.
-    # Time at which the script starts
+    # Time at which the script starts (command line --select takes priority over config)
+    programs_to_select = args.select if args.select else SELECT_PROGRAMS
     if args.experiment_dir is None:
         time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")  # Format: Year-Month-Day_Hour-Minute-Second
-        expr_run_dir = timing_dir / (time + "-" + platform + "-" + "_".join(STATIC_SCHEDULER_NAMES) + "-" + ("_".join(SELECT_PROGRAMS) if len(SELECT_PROGRAMS) > 0 else "ALL"))
+        expr_run_dir = timing_dir / (time + "-" + platform + "-" + "_".join(STATIC_SCHEDULER_NAMES) + "-" + ("_".join(programs_to_select) if len(programs_to_select) > 0 else "ALL"))
         expr_run_dir.mkdir()
     else:
         expr_run_dir = timing_dir / args.experiment_dir
@@ -601,26 +622,34 @@ def main(args=None):
     
     if args.experiment_dir is None:
         # Prepare arguments for each run_benchmark call.
-        args_1 = ["-hn=" + IP, "-un=" + UN, "-pwd=" + PW, "-pl=" + platform, "-f=--scheduler=NP", "-dd="+str(np_dir.resolve()), "--src=src", "--src-gen=src-gen"]
-        args_2 = ["-hn=" + IP, "-un=" + UN, "-pwd=" + PW, "-pl=" + platform, "-f=--scheduler=STATIC", "-f=--mapper=LB", "-dd="+str(lb_dir.resolve()), "--src=src", "--src-gen=src-gen"]
-        args_3 = ["-hn=" + IP, "-un=" + UN, "-pwd=" + PW, "-pl=" + platform, "-f=--scheduler=STATIC", "-f=--mapper=EGS", "-dd="+str(egs_dir.resolve()), "--src=src", "--src-gen=src-gen"]
-        if platform == "RPI4-QNX":
-            qnx_support_directory = Path(args.qnx_support_directory).resolve()
-            args_1.append("-qd=" + str(qnx_support_directory))
-            args_2.append("-qd=" + str(qnx_support_directory))
-            args_3.append("-qd=" + str(qnx_support_directory))
-        
+        if args.local:
+            # LOCAL MODE: Use -l flag instead of SSH credentials
+            args_1 = ["-l", "-pl=" + platform, "-f=--scheduler=NP", "-dd="+str(np_dir.resolve()), "--src=src", "--src-gen=src-gen"]
+            args_2 = ["-l", "-pl=" + platform, "-f=--scheduler=STATIC", "-f=--mapper=LB", "-dd="+str(lb_dir.resolve()), "--src=src", "--src-gen=src-gen"]
+            args_3 = ["-l", "-pl=" + platform, "-f=--scheduler=STATIC", "-f=--mapper=EGS", "-dd="+str(egs_dir.resolve()), "--src=src", "--src-gen=src-gen"]
+        else:
+            # REMOTE MODE: Use SSH credentials
+            args_1 = ["-hn=" + IP, "-un=" + UN, "-pwd=" + PW, "-pl=" + platform, "-f=--scheduler=NP", "-dd="+str(np_dir.resolve()), "--src=src", "--src-gen=src-gen"]
+            args_2 = ["-hn=" + IP, "-un=" + UN, "-pwd=" + PW, "-pl=" + platform, "-f=--scheduler=STATIC", "-f=--mapper=LB", "-dd="+str(lb_dir.resolve()), "--src=src", "--src-gen=src-gen"]
+            args_3 = ["-hn=" + IP, "-un=" + UN, "-pwd=" + PW, "-pl=" + platform, "-f=--scheduler=STATIC", "-f=--mapper=EGS", "-dd="+str(egs_dir.resolve()), "--src=src", "--src-gen=src-gen"]
+            if platform == "RPI4-QNX":
+                qnx_support_directory = Path(args.qnx_support_directory).resolve()
+                args_1.append("-qd=" + str(qnx_support_directory))
+                args_2.append("-qd=" + str(qnx_support_directory))
+                args_3.append("-qd=" + str(qnx_support_directory))
+
         if DASH_MODE:
             args_2.append("-f=--dash")
             args_3.append("-f=--dash")
-        
-        # Select programs
-        if len(SELECT_PROGRAMS) > 0:
-            for prog in SELECT_PROGRAMS:
+
+        # Select programs from command line argument (takes priority over config)
+        programs_to_select = args.select if args.select else SELECT_PROGRAMS
+        if len(programs_to_select) > 0:
+            for prog in programs_to_select:
                 args_1.append("--select="+prog)
                 args_2.append("--select="+prog)
                 args_3.append("--select="+prog)
-                
+
         # Exclude programs based on scheduler.
         if len(EXCLUDED_PROGRAMS) > 0:
             for prog in EXCLUDED_PROGRAMS['NP']:
@@ -629,11 +658,11 @@ def main(args=None):
                 args_2.append("--exclude="+prog)
             for prog in EXCLUDED_PROGRAMS['EGS']:
                 args_3.append("--exclude="+prog)
-                
+
         # Run the benchmark runner using the NP and the STATIC scheduler.
         # NOTE: The 2nd run's src-gen is copied back the host. So it's better to
         # be static because we want to inspect the graphs.
-        run_benchmark.main(args_1) # NP   
+        run_benchmark.main(args_1) # NP
         run_benchmark.main(args_2) # LB
         run_benchmark.main(args_3) # EGS
         
@@ -646,9 +675,10 @@ def main(args=None):
         except Exception as e:
             print(f"Error occurred: {e}")
     
-    # Get a list of benchmark names
-    if len(SELECT_PROGRAMS) > 0:
-        program_names = SELECT_PROGRAMS
+    # Get a list of benchmark names (command line --select takes priority over config)
+    programs_to_select = args.select if args.select else SELECT_PROGRAMS
+    if len(programs_to_select) > 0:
+        program_names = programs_to_select
     else:
         # Extract all program names from the benchmark directory.
         program_names = [str(file).split("/")[-1][:-3] for file in timing_benchmark_dir.glob('*') if file.is_file()]
