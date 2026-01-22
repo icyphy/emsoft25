@@ -1,0 +1,79 @@
+name: Local Benchmarks CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  local-benchmark-test:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout repository with submodules
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Set up Java 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install Python dependencies
+      run: |
+        pip install paramiko pandas seaborn imageio matplotlib
+
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential cmake ninja-build
+
+    - name: Build Lingua Franca compiler
+      run: |
+        cd lingua-franca
+        ./gradlew assemble
+
+    - name: Build and install trace utilities
+      run: |
+        cd lingua-franca/core/src/main/resources/lib/c/reactor-c/util/tracing
+        make trace_to_csv trace_to_chrome
+        sudo cp trace_to_csv trace_to_chrome /usr/local/bin/
+
+    - name: Add lfc to PATH
+      run: |
+        echo "${{ github.workspace }}/lingua-franca/bin" >> $GITHUB_PATH
+
+    - name: Verify lfc installation
+      run: |
+        lfc-dev --version
+        trace_to_csv --help | head -3
+
+    - name: Run local benchmark test (PingPong with NP scheduler)
+      run: |
+        cd benchmarks
+        python3 scripts/run_benchmark.py --local --src=src --src-gen=src-gen --select=PingPong -f=--scheduler=NP
+
+    - name: Verify benchmark output
+      run: |
+        # Check that CSV file was generated
+        ls -la benchmarks/data/
+        CSV_DIR=$(ls -td benchmarks/data/*/ | head -1)
+        echo "Checking directory: $CSV_DIR"
+        ls -la "$CSV_DIR"
+        test -f "${CSV_DIR}PingPong.csv" && echo "CSV file generated successfully"
+        test -f "${CSV_DIR}PingPong.lft" && echo "LFT trace file generated successfully"
+
+    - name: Upload benchmark artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: benchmark-results
+        path: benchmarks/data/
+        retention-days: 7

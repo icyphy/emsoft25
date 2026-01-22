@@ -158,6 +158,12 @@ parser.add_argument(
 parser.add_argument("-nr", "--no-run", action="store_true", help="Skip running the compiled programs.")
 parser.add_argument("-np", "--no-parse", action="store_true", help="Skip conversion of traces to csv")
 parser.add_argument(
+    "-l",
+    "--local",
+    action="store_true",
+    help="Run benchmarks locally instead of on a remote embedded device."
+)
+parser.add_argument(
     "-pl",
     "--platform",
     type=str,
@@ -195,7 +201,9 @@ def host_compile_lf_file(args, filename):
     cmd = ["lfc-dev", "-n"]
     if not args.no_tracing:
         cmd.append("--tracing")
-    cmd += args.flag + [filename]
+    if args.flag:
+        cmd += args.flag
+    cmd.append(filename)
     print("Executing local command: " + " ".join(cmd))
     result = host_execute_cmd(cmd)
     print("Exit code:", result.returncode)
@@ -364,6 +372,99 @@ def host_process_trace_data():
 
 
 ####################################################
+###############   Local Functions    ###############
+####################################################
+
+
+def local_compile_cmake_project(dir, arg1, arg2, arg3):
+    """Compile CMake project locally using subprocess."""
+    print("Compiling locally: " + dir)
+    build_dir = os.path.join(dir, "build")
+    os.makedirs(build_dir, exist_ok=True)
+
+    # Run cmake
+    cmake_cmd = ["cmake", ".."]
+    result = subprocess.run(cmake_cmd, cwd=build_dir, capture_output=True, text=True)
+    if result.returncode != 0:
+        print("CMAKE STDERR:", result.stderr)
+        return
+
+    # Run make
+    make_cmd = ["make"]
+    result = subprocess.run(make_cmd, cwd=build_dir, capture_output=True, text=True)
+    if result.returncode != 0:
+        print("MAKE STDERR:", result.stderr)
+    else:
+        print("Successfully compiled: " + dir)
+
+
+def local_run_program(dir, data_dir, command_line_args, arg3=None):
+    """
+    Execute compiled LF program locally.
+    Extract the binary name from the dir path.
+    E.g., path = /home/user/benchmarks/CoopSchedule/,
+    then bin = CoopSchedule.
+    """
+    bin_name = os.path.basename(os.path.normpath(dir))
+    bin_path = os.path.join(dir, "build", bin_name)
+
+    # Change to data_dir so trace files are generated there
+    original_cwd = os.getcwd()
+    os.makedirs(data_dir, exist_ok=True)
+    os.chdir(data_dir)
+
+    try:
+        if command_line_args.repeat == 0:
+            print(f"Running locally: {bin_path}")
+            result = subprocess.run([bin_path], capture_output=True, text=True, encoding='ISO-8859-1')
+            print("STDOUT:", result.stdout)
+            if result.stderr:
+                print("STDERR:", result.stderr)
+        else:
+            # Repeat the execution and write outputs in a txt file.
+            output_file = os.path.join(data_dir, f"{bin_name}.txt")
+            with open(output_file, 'w') as f:
+                for i in range(command_line_args.repeat):
+                    result = subprocess.run([bin_path], capture_output=True, text=True, encoding='ISO-8859-1')
+                    f.write(result.stdout)
+
+        # Rename the .lft file so we know which is which.
+        if not command_line_args.no_tracing:
+            lft_source = os.path.join(data_dir, "main_0.lft")
+            lft_dest = os.path.join(data_dir, f"{bin_name}.lft")
+            if os.path.exists(lft_source):
+                os.rename(lft_source, lft_dest)
+    finally:
+        os.chdir(original_cwd)
+
+
+def local_run_trace_conversion(file, dir, convert_for_chrome=False, arg3=None):
+    """Run trace_to_csv locally."""
+    print(f"Converting trace locally: {file}")
+    cmd = ["trace_to_csv", file]
+    result = subprocess.run(cmd, cwd=dir, capture_output=True, text=True)
+    print("STDOUT:", result.stdout)
+    if result.stderr:
+        print("STDERR:", result.stderr)
+
+    if convert_for_chrome:
+        cmd = ["trace_to_chrome", file]
+        result = subprocess.run(cmd, cwd=dir, capture_output=True, text=True)
+        print("STDOUT:", result.stdout)
+        if result.stderr:
+            print("STDERR:", result.stderr)
+
+
+def local_forall_files_in_dir_do(func, dir, arg1=None, arg2=None, arg3=None):
+    """Iterate over files in a local directory and apply func to each."""
+    files = [f for f in os.listdir(dir) if os.path.isfile(os.path.join(dir, f))]
+    print(f"Files in {dir}: {files}")
+    for file in files:
+        full_path = os.path.join(dir, file)
+        func(full_path, arg1, arg2, arg3)
+
+
+####################################################
 ###############   Remote Functions   ###############
 ####################################################
 
@@ -528,19 +629,26 @@ def main(args=None):
 
     # Check if the --post-only flag is set. If so, skip all prior steps and just
     # perform post analyses.
+    is_local = args.local
+
     if not args.post_only:
 
-        # Step 2.
-        if not host_connect_to_remote(args):
-            print("Run Benchmark: Cannot connect to host! Abort.")
-            sys.exit(1)
+        if is_local:
+            print("Run Benchmark: Running in LOCAL mode.")
+            # In local mode, use host directories directly
+            local_data = host_data / time if args.data_dir is None else Path(args.data_dir)
         else:
-            print("Run Benchmark: Connected to remote host " + args.hostname + ".")
+            # Step 2: Connect to remote
+            if not host_connect_to_remote(args):
+                print("Run Benchmark: Cannot connect to host! Abort.")
+                sys.exit(1)
+            else:
+                print("Run Benchmark: Connected to remote host " + args.hostname + ".")
 
-        # Step 3 (skipped).
-        remote_execute_cmd("hostname")
+            # Step 3 (skipped).
+            remote_execute_cmd("hostname")
 
-        # Step 4.1.
+        # Step 4.1: Compile LF files on host
         selected = None
         excluded = []
         if args.select is not None:
@@ -551,85 +659,107 @@ def main(args=None):
             host_rm_dir(host_src_gen)
             host_compile_lf_files_in_dir(args, host_src, selected, excluded)
 
-        # Step 4.2.
-        if not args.no_scp:
-            remote_rm_dir(remost_dest)
-            remote_create_dir(remost_dest)
-            if (args.platform != "RPI4-QNX"):
-                host_forall_subdirs_do(host_scp_dir, host_src_gen, remost_dest, args, True)
-            
-        # Step 4.3
-        if not args.no_cmake:
-            if (args.platform != "RPI4-QNX"):
-                remote_forall_subdirs_do(remote_compile_cmake_project, remost_dest)
-            else:
-                # If an existing host_bin directory exists, remove it.
-                # Otherwise, binaries from previous runs could persist
-                # and get scp-ed to the remote target mistakenly.
-                host_rm_dir(host_bin)
-                # Cross compile the LF programs, which puts binaries in host_bin
-                host_cross_compile_qnx_lf_files_in_dir(args, host_src_gen)
-                # Secure copy the generated file from host_bin to the remote host
-                host_scp_exec_files(host_bin, remost_dest, args)
+        if is_local:
+            # LOCAL MODE: Compile and run locally
 
-        # Step 4.4
-        # Skipped. Assuming tracing is in use
+            # Step 4.3: Compile CMake projects locally
+            if not args.no_cmake:
+                host_forall_subdirs_do(local_compile_cmake_project, host_src_gen)
 
-        if not args.no_run:
-            # Step 4.5: run programs and collect trace files in a remote data directory.
-            remote_rm_dir(remote_data)
-            remote_create_dir(remote_data)
-            if (args.platform != "RPI4-QNX"):
-                remote_forall_subdirs_do(func=remote_run_program, dir=remost_dest, arg1=remote_data, arg2=args)
-            else:
-                remote_run_all_programs_qnx(remost_dest, remote_data)
-                
-            # Step 4.6: run tracing remotely, if not a QNX platform
-            if not args.no_tracing:
-                if (args.platform != "RPI4-QNX"):
+            if not args.no_run:
+                # Step 4.5: Run programs locally and collect trace files
+                host_create_dir(local_data)
+                host_forall_subdirs_do(func=local_run_program, dir=host_src_gen, arg1=str(local_data), arg2=args)
+
+                # Step 4.6: Run trace conversion locally
+                if not args.no_tracing:
                     convert_for_chrome = True
-                    remote_forall_files_in_dir_do(remote_run_trace_conversion, remote_data, remote_data, convert_for_chrome)
-                    
-                    # Step 4.7
-                    host_create_dir(host_data)
+                    # Find and convert all .lft files in the local data directory
+                    for lft_file in os.listdir(local_data):
+                        if lft_file.endswith(".lft"):
+                            local_run_trace_conversion(lft_file, str(local_data), convert_for_chrome)
+        else:
+            # REMOTE MODE: Original behavior
 
+            # Step 4.2.
+            if not args.no_scp:
+                remote_rm_dir(remost_dest)
+                remote_create_dir(remost_dest)
+                if (args.platform != "RPI4-QNX"):
+                    host_forall_subdirs_do(host_scp_dir, host_src_gen, remost_dest, args, True)
+
+            # Step 4.3
+            if not args.no_cmake:
+                if (args.platform != "RPI4-QNX"):
+                    remote_forall_subdirs_do(remote_compile_cmake_project, remost_dest)
+                else:
+                    # If an existing host_bin directory exists, remove it.
+                    # Otherwise, binaries from previous runs could persist
+                    # and get scp-ed to the remote target mistakenly.
+                    host_rm_dir(host_bin)
+                    # Cross compile the LF programs, which puts binaries in host_bin
+                    host_cross_compile_qnx_lf_files_in_dir(args, host_src_gen)
+                    # Secure copy the generated file from host_bin to the remote host
+                    host_scp_exec_files(host_bin, remost_dest, args)
+
+            # Step 4.4
+            # Skipped. Assuming tracing is in use
+
+            if not args.no_run:
+                # Step 4.5: run programs and collect trace files in a remote data directory.
+                remote_rm_dir(remote_data)
+                remote_create_dir(remote_data)
+                if (args.platform != "RPI4-QNX"):
+                    remote_forall_subdirs_do(func=remote_run_program, dir=remost_dest, arg1=remote_data, arg2=args)
+                else:
+                    remote_run_all_programs_qnx(remost_dest, remote_data)
+
+                # Step 4.6: run tracing remotely, if not a QNX platform
+                if not args.no_tracing:
+                    if (args.platform != "RPI4-QNX"):
+                        convert_for_chrome = True
+                        remote_forall_files_in_dir_do(remote_run_trace_conversion, remote_data, remote_data, convert_for_chrome)
+
+                        # Step 4.7
+                        host_create_dir(host_data)
+
+                        if args.data_dir is None:
+                            data_entry_dir = host_data / time
+                        else:
+                            data_entry_dir = args.data_dir
+                        host_scp_dir(remote_data, data_entry_dir, args, from_host_to_remote=False)
+                    else:
+                        # Step 4.7
+                        if args.data_dir is None:
+                            data_entry_dir = host_data / time
+                        else:
+                            data_entry_dir = args.data_dir
+                        host_scp_dir(remote_data, data_entry_dir, args, from_host_to_remote=False)
+
+                        # Now, run trace-to-csv on the host
+                        # Note that files were transformed as txt files
+                        os.chdir(data_entry_dir)
+                        for txt_file in os.listdir(data_entry_dir):
+                            if txt_file.endswith(".txt"):
+                                lft_file = os.path.splitext(txt_file)[0] + ".lft"
+                                # Rename the file
+                                os.rename(txt_file, lft_file)
+                                # Now, run trace_to_csv
+                                cmd = ["trace_to_csv", lft_file]
+                                host_execute_cmd(cmd)
+                                print("Converted: " + lft_file)
+
+                # If this is true, we are doing performance benchmarking.
+                # Copy the txt file back to host.
+                elif args.repeat > 0:
                     if args.data_dir is None:
                         data_entry_dir = host_data / time
                     else:
                         data_entry_dir = args.data_dir
                     host_scp_dir(remote_data, data_entry_dir, args, from_host_to_remote=False)
-                else:
-                    # Step 4.7
-                    if args.data_dir is None:
-                        data_entry_dir = host_data / time
-                    else:
-                        data_entry_dir = args.data_dir
-                    host_scp_dir(remote_data, data_entry_dir, args, from_host_to_remote=False)
 
-                    # Now, run trace-to-csv on the host
-                    # Note that files were transformed as txt files
-                    os.chdir(data_entry_dir)
-                    for txt_file in os.listdir(data_entry_dir):
-                        if txt_file.endswith(".txt"):
-                            lft_file = os.path.splitext(txt_file)[0] + ".lft"
-                            # Rename the file
-                            os.rename(txt_file, lft_file) 
-                            # Now, run trace_to_csv
-                            cmd = ["trace_to_csv", lft_file]
-                            host_execute_cmd(cmd)
-                            print("Converted: " + lft_file)
-            
-            # If this is true, we are doing performance benchmarking.
-            # Copy the txt file back to host.
-            elif args.repeat > 0:
-                if args.data_dir is None:
-                    data_entry_dir = host_data / time
-                else:
-                    data_entry_dir = args.data_dir
-                host_scp_dir(remote_data, data_entry_dir, args, from_host_to_remote=False)
-            
-        # Step 4.8
-        host_close_connection_to_remote()
+            # Step 4.8
+            host_close_connection_to_remote()
 
     # Step 5: Post-Processing
     if args.post_analysis is not None:

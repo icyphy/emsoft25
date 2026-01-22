@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  emsoft25:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: emsoft25:local
+    container_name: emsoft25-benchmarks
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+    command: /bin/bash

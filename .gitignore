@@ -10,5 +10,7 @@
 
 benchmarks/experiment-data
 benchmarks/scripts/credentials.py
+benchmarks/data
+benchmarks/include
 
 .vscode/
