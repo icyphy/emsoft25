@@ -41,6 +41,12 @@ jobs:
         cd lingua-franca
         ./gradlew assemble
 
+    - name: Build and install trace utilities
+      run: |
+        cd lingua-franca/core/src/main/resources/lib/c/reactor-c/util/tracing
+        make trace_to_csv trace_to_chrome
+        sudo make install
+
     - name: Add lfc to PATH
       run: |
         echo "${{ github.workspace }}/lingua-franca/bin" >> $GITHUB_PATH
@@ -48,6 +54,7 @@ jobs:
     - name: Verify lfc installation
       run: |
         lfc-dev --version
+        trace_to_csv --help | head -3
 
     - name: Run local benchmark test (PingPong with NP scheduler)
       run: |
